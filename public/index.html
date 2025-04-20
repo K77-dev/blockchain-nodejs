@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Simples</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-link me-2"></i>Blockchain Simples</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#transactions">Transações</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#mining">Mineração</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#blockchain">Blockchain</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="text-center mb-5">
+            <h1 class="display-4"><i class="fas fa-cubes me-3"></i>Blockchain Simples</h1>
+            <p class="lead">Uma implementação educacional de blockchain em Node.js</p>
+        </header>
+
+        <div class="row">
+            <div class="col-md-6 mb-4" id="transactions">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h2 class="h5 mb-0"><i class="fas fa-exchange-alt me-2"></i>Criar Transação</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="transaction-form">
+                            <div class="mb-3">
+                                <label for="from" class="form-label">De (endereço):</label>
+                                <input type="text" class="form-control" id="from" name="from" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="to" class="form-label">Para (endereço):</label>
+                                <input type="text" class="form-control" id="to" name="to" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Valor:</label>
+                                <input type="number" class="form-control" id="amount" name="amount" step="0.01" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Enviar Transação
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4" id="mining">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h2 class="h5 mb-0"><i class="fas fa-hammer me-2"></i>Minerar Transações Pendentes</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="mine-form">
+                            <div class="mb-3">
+                                <label for="minerAddress" class="form-label">Endereço do Minerador:</label>
+                                <input type="text" class="form-control" id="minerAddress" name="minerAddress" required>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-hammer me-2"></i>Minerar
+                            </button>
+                        </form>
+                        <div id="mining-result" class="alert mt-3 d-none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h2 class="h5 mb-0"><i class="fas fa-wallet me-2"></i>Verificar Saldo</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="balance-form">
+                            <div class="mb-3">
+                                <label for="balanceAddress" class="form-label">Endereço:</label>
+                                <input type="text" class="form-control" id="balanceAddress" name="balanceAddress" required>
+                            </div>
+                            <button type="submit" class="btn btn-info w-100 text-white">
+                                <i class="fas fa-search-dollar me-2"></i>Verificar
+                            </button>
+                        </form>
+                        <div id="balance-result" class="alert mt-3 d-none"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h2 class="h5 mb-0"><i class="fas fa-list me-2"></i>Transações Pendentes</h2>
+                        <button id="refresh-pending" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-sync-alt me-1"></i>Atualizar
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="pending-transactions" class="result-box">
+                            <p class="text-muted">Nenhuma transação pendente.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4" id="blockchain">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h2 class="h5 mb-0"><i class="fas fa-cubes me-2"></i>Blockchain</h2>
+                        <div>
+                            <button id="validate-chain" class="btn btn-sm btn-outline-success me-2">
+                                <i class="fas fa-check-circle me-1"></i>Validar
+                            </button>
+                            <button id="refresh-blockchain" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-sync-alt me-1"></i>Atualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="validation-result" class="alert mb-3 d-none"></div>
+                        <div id="blockchain" class="result-box">
+                            <p class="text-muted">Carregando blockchain...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>Projeto Educacional de Blockchain em Node.js</p>
+            <p class="mb-0"><small>Desenvolvido para fins de aprendizado</small></p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
